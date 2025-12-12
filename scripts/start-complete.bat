@@ -1,4 +1,7 @@
 @echo off
+setlocal
+set "SCRIPT_DIR=%~dp0"
+pushd "%SCRIPT_DIR%.."
 title SOA Architecture - Startup Completo
 echo ===============================================
 echo    INICIALIZACAO COMPLETA DA ARQUITETURA SOA
@@ -6,32 +9,32 @@ echo ===============================================
 
 echo.
 echo FASE 1: Iniciando infraestrutura...
-call scripts/start-docker.bat
+call "%SCRIPT_DIR%start-docker.bat"
 
 echo.
 echo FASE 2: Aguardando servicos...
-call scripts/wait-for-services.bat
+call "%SCRIPT_DIR%wait-for-services.bat"
 
 echo.
 echo FASE 3: Criando topicos Kafka...
-call scripts/create-kafka-topics.bat
+call "%SCRIPT_DIR%create-kafka-topics.bat"
 
 echo.
 echo FASE 4: Verificando Kafka...
-call scripts/check-kafka.bat
+call "%SCRIPT_DIR%check-kafka.bat"
 
 echo.
-echo FASE 5: Verificando saúde do sistema...
-call scripts/health-check.bat
+echo FASE 5: Verificando saude do sistema...
+call "%SCRIPT_DIR%health-check.bat"
 
 echo.
 echo FASE 6: Testando API...
-call scripts/test-api.bat
+call "%SCRIPT_DIR%test-api.bat"
 
 echo.
 echo FASE 7: Configurando monitoramento...
 echo Configurando datasource do Prometheus no Grafana...
-#call scripts/monitoring-setup.bat
+call "%SCRIPT_DIR%monitoring-setup.bat"
 timeout 10
 
 echo.
@@ -60,3 +63,4 @@ echo Para testar a API: test-api.bat
 echo Para parar: stop-docker.bat
 echo.
 pause
+popd

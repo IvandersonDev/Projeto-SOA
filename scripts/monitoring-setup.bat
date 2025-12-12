@@ -1,4 +1,7 @@
 @echo off
+setlocal
+set "SCRIPT_DIR=%~dp0"
+
 echo ====================================
 echo    CONFIGURACAO DE MONITORAMENTO
 echo ====================================
@@ -10,22 +13,11 @@ docker ps --filter "name=grafana" --format "table {{.Names}}\t{{.Status}}"
 
 echo.
 echo 2. Configurando Grafana...
-call scripts/setup-grafana.bat
+call "%SCRIPT_DIR%setup-grafana.bat"
 
 echo.
 echo 3. Verificando metricas no Prometheus...
-curl -s "http://localhost:9090/api/v1/query?query=up" | python -c "
-import json, sys
-data = json.load(sys.stdin)
-if 'data' in data and 'result' in data['data']:
-    for result in data['data']['result']:
-        job = result['metric'].get('job', 'unknown')
-        value = result['value'][1]
-        status = 'OK' if value == '1' else 'ERROR'
-        print(f'{status} {job}: {value}')
-else:
-    print('Nenhuma metrica encontrada')
-"
+curl -s "http://localhost:9090/api/v1/query?query=up" | python -c "import json,sys; data=json.load(sys.stdin); results=data.get('data', {}).get('result', []); print('\n'.join([('OK ' if r['value'][1]=='1' else 'ERROR ')+r['metric'].get('job','unknown')+': '+r['value'][1] for r in results]) if results else 'Nenhuma metrica encontrada')"
 
 echo.
 echo 4. URLs de Monitoramento:
@@ -49,3 +41,4 @@ echo.
 
 echo Configuracao de monitoramento concluida!
 pause
+endlocal

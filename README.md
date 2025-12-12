@@ -14,8 +14,12 @@ Mini rede social (serviço de usuários e serviço de posts) exposta via API Gat
 - Corrigido /metrics de usuarios-service e posts-service (import CONTENT_TYPE_LATEST).
 - `scripts/check-metrics.bat` reescrito para PowerShell (lista jobs e métricas customizadas).
 - `scripts/check-kafka.bat` simplificado para garantir `test-topic` e produzir/consumir mensagem de teste.
-- Dependência cryptography já fixada em 41.0.7 nos requirements.
-- Ajuste nos healthcheck do Consul, bind do Prometheus
+- Dependência corrigida para cryptography==41.0.7 em todos os requirements (41.0.8 não existe no PyPI e quebrava o build).
+- Docker Compose: healthcheck do Consul ajustado e remoção do bind duplicado do Prometheus (evita “device or resource busy” e libera service_healthy para dependências).
+- `scripts/start-complete.bat` e `scripts/test-api.bat` agora resolvem o path do script e chamam os .bat com caminho absoluto (evita erro “scripts não é reconhecido”).
+- Provisionamento do Grafana movido para PowerShell (`scripts/setup-grafana.ps1`) chamado via `scripts/setup-grafana.bat`, evitando parse de PowerShell dentro do cmd.
+- `scripts/monitoring-setup.bat` usa SCRIPT_DIR e check de Prometheus em linha única para evitar problemas de parse.
+- `scripts/create-kafka-topics.bat` agora usa `--if-not-exists` para criar tópicos idempotentemente (sem erro quando já existem).
 ## Execução rápida (Docker - Windows)
 Pré-requisito: Docker Desktop ativo.
 ```bash

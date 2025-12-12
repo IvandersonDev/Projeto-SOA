@@ -11,10 +11,10 @@ if %errorlevel% neq 0 (
 )
 
 echo Criando topico user-events...
-docker exec kafka kafka-topics --bootstrap-server localhost:29092 --create --topic user-events --partitions 1 --replication-factor 1
+docker exec kafka kafka-topics --bootstrap-server localhost:29092 --create --if-not-exists --topic user-events --partitions 1 --replication-factor 1
 
 echo Criando topico post-events...
-docker exec kafka kafka-topics --bootstrap-server localhost:29092 --create --topic post-events --partitions 1 --replication-factor 1
+docker exec kafka kafka-topics --bootstrap-server localhost:29092 --create --if-not-exists --topic post-events --partitions 1 --replication-factor 1
 
 echo Listando topicos criados...
 docker exec kafka kafka-topics --bootstrap-server localhost:29092 --list

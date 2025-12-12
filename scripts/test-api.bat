@@ -1,9 +1,12 @@
 @echo off
+setlocal
+set "SCRIPT_DIR=%~dp0"
+pushd "%SCRIPT_DIR%.."
 echo Teste completo da API SOA...
 
 echo.
 echo 1. Verificando se servicos estao prontos...
-call scripts/wait-for-services.bat
+call "%SCRIPT_DIR%wait-for-services.bat"
 
 echo.
 echo 2. Registrando usuario...
@@ -56,4 +59,6 @@ curl -s http://localhost:8000/metrics | findstr /C:"requests_total" | findstr /V
 
 echo.
 echo Teste completo concluido!
+popd
+endlocal
 pause
